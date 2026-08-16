@@ -1,0 +1,22 @@
+elasticsearchHosts: "http://elasticsearch-master:9200"
+# Disable all security-related features (ES security is disabled)
+protocol: http
+automountToken: false
+extraEnvs:
+  - name: ELASTICSEARCH_SSL_VERIFICATIONMODE
+    value: "none"
+  - name: SERVER_SSL_ENABLED
+    value: "false"
+# Skip Elasticsearch token mount
+kibanaConfig:
+  kibana.yml: |
+    server.host: "0.0.0.0"
+    elasticsearch.hosts: ["http://elasticsearch-master:9200"]
+    elasticsearch.ssl.verificationMode: none
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+  limits:
+    cpu: "1000m"
+    memory: "2Gi"

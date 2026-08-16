@@ -1,0 +1,13 @@
+grafana:
+  enabled: true
+  # TODO: For production, use an existing Kubernetes Secret instead:
+  #   admin:
+  #     existingSecret: "grafana-admin-credentials"
+  #     userKey: admin-user
+  #     passwordKey: admin-password
+  adminPassword: "K8s-Gr@fana#2026!"
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
