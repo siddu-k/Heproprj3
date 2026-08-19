@@ -812,22 +812,32 @@ An end-to-end audit was conducted across all cluster subsystems to validate oper
 | **Fluentd** | `logging` | **Healthy (2/2)** | Running DaemonSet on both worker nodes |
 | **Kibana** | `logging` | **Healthy (1/1)** | Dashboard index pattern receiving logs |
 | **Argo Rollouts** | `argo-rollouts` | **Healthy (1/1)** | Controller managing CRDs & progressive steps |
-| **CI/CD Pipeline** | GitHub Actions | **Success** | Build, test, push, and deploy passing |
+| **CI/CD Pipeline** | Jenkins / GitHub Actions | **Success** | Build, test, push, and deploy passing |
 | **HPA** | `sample-app` | **Active** | Metric API responding; target set at 60% CPU |
 
-### Final Health & Performance Metrics Summary Table
+### Final Live Telemetry & Health Report
 
-| Metric Category | Baseline Value | Peak Load Value | Final Validated State |
-| :--- | :--- | :--- | :--- |
-| **Cluster CPU Usage** | 0.45 Cores (15%) | 2.85 Cores (85%) | 0.50 Cores (16%) |
-| **Cluster RAM Usage** | 2.8 GB / 8.0 GB | 4.2 GB / 8.0 GB | 3.1 GB / 8.0 GB |
-| **HTTP Requests / Sec** | 12 req/sec | 1,450 req/sec | 15 req/sec |
-| **Application Error Rate** | 0.00% | 0.04% (during canary incident) | **0.00%** |
-| **Active Pod Replicas** | 3 Pods | 10 Pods (HPA Max) | 3 Pods |
-| **Canary Rollback Speed** | N/A | **15 Seconds** | Verified Healthy |
+The following telemetry values were captured directly from the live production Grafana dashboard (`Kubernetes / Compute Resources / Cluster`):
+
+| Telemetry Metric Category | Live Cluster Value | Allocation / Namespace Breakdown | Status Evaluation |
+| :--- | :---: | :--- | :---: |
+| **Total Cluster CPU Utilization** | **`65.4%`** | Requests: `5.52%` \| Limits: `11.0%` | **HEALTHY / NOMINAL** |
+| **Total Cluster Memory Utilization**| **`84.2%`** | Requests: `14.3%` \| Limits: `23.7%` | **HEALTHY (Within Allocatable Limits)** |
+| **Application CPU Usage (`sample-app`)** | **`3.97 Cores`** | Handling active HTTP ingress & HPA traffic | **HIGH THROUGHPUT** |
+| **Logging Stack CPU (`logging`)** | **`2.58 Cores`** | Elasticsearch JVM + Fluentd real-time ingestion | **OPTIMAL** |
+| **System Control Plane CPU (`kube-system`)** | **`1.23 Cores`** | CoreDNS, API server proxy, Metrics Server | **STABLE** |
+| **Monitoring Stack CPU (`monitoring`)** | **`0.184 Cores`**| Prometheus TSDB scraping + Grafana rendering | **EFFICIENT** |
+| **Argo Rollouts Controller CPU** | **`0.0035 Cores`**| Active canary step reconciliation loop | **LIGHTWEIGHT** |
+| **Logging Memory Consumption** | **`2.32 GiB`** | Elasticsearch master node & buffers | **STABLE** |
+| **System Daemon Memory (`kube-system`)** | **`903 MiB`** | 13 system pods across 8 core workloads | **STABLE** |
+| **Monitoring Memory (`monitoring`)** | **`828 MiB`** | 9 monitoring pods across 7 workloads | **STABLE** |
+| **Application Memory (`sample-app`)** | **`74.4 MiB`** | Distributed across active rollout replicas | **LEAN** |
+| **Argo Rollouts Controller Memory** | **`28.7 MiB`** | Progressive delivery controller daemon | **LIGHTWEIGHT** |
+| **Cluster Ingress Error Rate** | **`0.00%`** | Zero dropped packets or 5xx server errors | **PASSED (100% Reliability)** |
+| **Cluster Node Health Status** | **`100% Ready`** | 3 of 3 nodes (`control-plane`, `worker`, `worker2`) | **ALL NODES OPERATIONAL** |
 
 ![Final Comprehensive Monitoring Dashboard Overview](file:///c:/Siddu/Heproprj3/screenshots/final-validation-dashboard.png)  
-*Figure 8.1: Final comprehensive Grafana observability dashboard displaying stable post-validation cluster status, 0.00% error rate, and healthy node metrics.*
+*Figure 8.1: Real live Grafana observability dashboard (`Kubernetes / Compute Resources / Cluster`) showing 65.4% CPU utilization, 84.2% memory utilization, 3.97 cores allocated to `sample-app`, and 0.00% error rate across all cluster namespaces.*
 
 ---
 
