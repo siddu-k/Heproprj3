@@ -3,7 +3,7 @@
 Thumbs.db
 .vscode/
 .idea/
-
+/screenshots
 # Helm
 charts/
 *.tgz
