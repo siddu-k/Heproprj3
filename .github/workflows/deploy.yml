@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 env:
-  IMAGE_NAME: sidduk/sample-web
+  IMAGE_NAME: siddu99/sample-web
 
 jobs:
   build-and-deploy:
